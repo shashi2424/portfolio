@@ -3,6 +3,13 @@
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 
+import profilePic from './assets/profile-pic.jpeg';
+import linkedinIcon from './assets/linkedin.png';
+import githubIcon from './assets/github.png';
+import resumeImg from "./assets/resume.png"
+
+import resumePdf from "./assets/resume-example.pdf"
+
 const Profile = () => {
     return (
         <motion.section
@@ -21,7 +28,7 @@ const Profile = () => {
                     ease: "easeOut"
                 }}
             >
-                <img src="/assets/profile-pic.jpeg" alt="Shashi Kumar profile picture" />
+                <img src={profilePic} alt="Shashi Kumar profile picture" />
             </motion.div>
             <div className="section__text">
                 <motion.p
@@ -65,10 +72,10 @@ const Profile = () => {
                             boxShadow: "0px 5px 10px rgba(0, 0, 0, 0.2)"
                         }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => window.open('/assets/resume-example.pdf')}
+                        onClick={() => window.open(`${resumePdf}`)}
                     >
                         Resume
-                        <img style={{ width: "20px" }} src="/assets/resume.png" alt="resume logo" />
+                        <img style={{ width: "20px" }} src={resumeImg} alt="resume logo" />
                     </motion.button>
                     <motion.button
                         className="btn btn-color-1"
@@ -93,7 +100,7 @@ const Profile = () => {
                     transition={{ duration: 0.5, delay: 0.8 }}
                 >
                     <motion.img
-                        src="/assets/linkedin.png"
+                        src={linkedinIcon}
                         alt="My LinkedIn profile"
                         className="icon"
                         whileHover={{ scale: 1.2, rotate: 5 }}
@@ -101,7 +108,7 @@ const Profile = () => {
                         onClick={() => window.open('https://linkedin.com/in/shashi-kumar-96941915a/')}
                     />
                     <motion.img
-                        src="/assets/github.png"
+                        src={githubIcon}
                         alt="My Github profile"
                         className="icon"
                         whileHover={{ scale: 1.2, rotate: -5 }}

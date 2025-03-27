@@ -2,6 +2,9 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
+import mailLogo from "./assets/email.png"
+import linkedLogo from "./assets/linkedin.png"
+
 const Contact = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, threshold: 0.1 });
@@ -39,7 +42,7 @@ const Contact = () => {
                     transition={{ type: "spring", stiffness: 300 }}
                 >
                     <motion.img
-                        src="/assets/email.png"
+                        src={mailLogo}
                         alt="Email icon"
                         className="icon contact-icon email-icon"
                         whileHover={{ rotate: 10 }}
@@ -64,7 +67,7 @@ const Contact = () => {
                     transition={{ type: "spring", stiffness: 300 }}
                 >
                     <motion.img
-                        src="/assets/linkedin.png"
+                        src={linkedLogo}
                         alt="LinkedIn icon"
                         className="icon contact-icon"
                         whileHover={{ rotate: -10 }}

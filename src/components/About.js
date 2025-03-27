@@ -1,6 +1,13 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
+import aboutPic from './assets/about-pic.jpeg';
+import experienceIcon from './assets/experience.png';
+import educationIcon from './assets/education.png';
+import checkmarkIcon from './assets/checkmark.png';
+import arrowIcon from './assets/arrow.png';
+
+
 const About = () => {
     // Reference for scroll animation
     const ref = useRef(null);
@@ -83,7 +90,7 @@ const About = () => {
                             }}
                         >
                             <img
-                                src="/assets/about-pic.jpeg"
+                                src={aboutPic}
                                 alt="Portrait photograph"
                                 className="about-pic"
                                 style={{
@@ -109,7 +116,7 @@ const About = () => {
                                     }}
                                 >
                                     <motion.img
-                                        src="/assets/experience.png"
+                                        src={experienceIcon}
                                         alt="Experience icon"
                                         className="icon"
                                         whileHover={{ rotate: 5 }}
@@ -128,7 +135,7 @@ const About = () => {
                                     }}
                                 >
                                     <motion.img
-                                        src="/assets/education.png"
+                                        src={educationIcon}
                                         alt="Education icon"
                                         className="icon"
                                         whileHover={{ rotate: -5 }}
@@ -182,7 +189,7 @@ const About = () => {
                                     <div className="article-container">
                                         <motion.article variants={skillItem}>
                                             <img
-                                                src="/assets/checkmark.png"
+                                                src={checkmarkIcon}
                                                 alt="Experience icon"
                                                 className="icon"
                                             />
@@ -193,7 +200,7 @@ const About = () => {
                                         </motion.article>
                                         <motion.article variants={skillItem}>
                                             <img
-                                                src="/assets/checkmark.png"
+                                                src={checkmarkIcon}
                                                 alt="Experience icon"
                                                 className="icon"
                                             />
@@ -204,7 +211,7 @@ const About = () => {
                                         </motion.article>
                                         <motion.article variants={skillItem}>
                                             <img
-                                                src="/assets/checkmark.png"
+                                                src={checkmarkIcon}
                                                 alt="Experience icon"
                                                 className="icon"
                                             />
@@ -215,7 +222,7 @@ const About = () => {
                                         </motion.article>
                                         <motion.article variants={skillItem}>
                                             <img
-                                                src="/assets/checkmark.png"
+                                                src={checkmarkIcon}
                                                 alt="Experience icon"
                                                 className="icon"
                                             />
@@ -226,7 +233,7 @@ const About = () => {
                                         </motion.article>
                                         <motion.article variants={skillItem}>
                                             <img
-                                                src="/assets/checkmark.png"
+                                                src={checkmarkIcon}
                                                 alt="Experience icon"
                                                 className="icon"
                                             />
@@ -237,7 +244,7 @@ const About = () => {
                                         </motion.article>
                                         <motion.article variants={skillItem}>
                                             <img
-                                                src="/assets/checkmark.png"
+                                                src={checkmarkIcon}
                                                 alt="Experience icon"
                                                 className="icon"
                                             />
@@ -260,7 +267,7 @@ const About = () => {
                                     <div className="article-container">
                                         <motion.article variants={skillItem}>
                                             <img
-                                                src="/assets/checkmark.png"
+                                                src={checkmarkIcon}
                                                 alt="Experience icon"
                                                 className="icon"
                                             />
@@ -271,7 +278,7 @@ const About = () => {
                                         </motion.article>
                                         <motion.article variants={skillItem}>
                                             <img
-                                                src="/assets/checkmark.png"
+                                                src={checkmarkIcon}
                                                 alt="Experience icon"
                                                 className="icon"
                                             />
@@ -282,7 +289,7 @@ const About = () => {
                                         </motion.article>
                                         <motion.article variants={skillItem}>
                                             <img
-                                                src="/assets/checkmark.png"
+                                                src={checkmarkIcon}
                                                 alt="Experience icon"
                                                 className="icon"
                                             />
@@ -293,7 +300,7 @@ const About = () => {
                                         </motion.article>
                                         <motion.article variants={skillItem}>
                                             <img
-                                                src="/assets/checkmark.png"
+                                                src={checkmarkIcon}
                                                 alt="Experience icon"
                                                 className="icon"
                                             />
@@ -311,7 +318,7 @@ const About = () => {
                     {/* Navigation Arrow */}
                     <motion.div className="arrow-container">
                         <motion.img
-                            src="/assets/arrow.png"
+                            src={arrowIcon}
                             alt="Arrow pointing to next section"
                             className="icon arrow"
                             variants={itemVariants}

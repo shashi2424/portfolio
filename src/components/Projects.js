@@ -1,6 +1,12 @@
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 
+import project1 from "./assets/project-1.png"
+import project2 from "./assets/project-2.jpg"
+import project3 from "./assets/project-3.jpg"
+import arrow from "./assets/arrow.png"
+
+
 const Projects = () => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, threshold: 0.1 });
@@ -24,17 +30,17 @@ const Projects = () => {
     const projects = [
         {
             title: "Way2Experts Professional Consultation Platform",
-            image: "/assets/project-1.png",
+            image: `${project1}`,
             description: "Developed a real-time communication platform enabling professionals to offer consultations across multiple domains. Built a scalable Node.js backend supporting 1000+ concurrent users with minimal latency. Integrated payment gateways, real-time chat via WebSocket, and Exotel API for seamless call management."
         },
         {
             title: "Way2Ads Management System",
-            image: "/assets/project-2.jpg",
+            image: `${project2}`,
             description: "Developed an ad management system using React.js and Node.js, optimizing ad delivery and tracking. Designed efficient database queries in PostgreSQL and MongoDB, improving data retrieval by 40%. Implemented role-based access control with custom interfaces for five permission levels."
         },
         {
             title: "YouTube Multi-channel Publishing Platform",
-            image: "/assets/project-3.jpg",
+            image:  `${project3}`,
             description: "Built a scalable publishing platform for YouTube, serving 300,000+ subscribers with optimized content distribution. Automated video creation using templates via a cron job, streamlining publishing across YouTube, Instagram, and Facebook."
         }
     ];
@@ -93,7 +99,7 @@ const Projects = () => {
                 </div>
             </motion.div>
             <motion.img
-                src="/assets/arrow.png"
+                src={arrow}
                 alt="Arrow icon"
                 className="icon arrow"
                 whileHover={{ scale: 1.2, y: 5 }}

@@ -2,6 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link, animateScroll as scroll } from 'react-scroll';
 
+import linkedinIcon from "./assets/linkedin.png"
+import githubIcon from "./assets/github.png"
+
 const Footer = () => {
     // Animation variants
     const footerVariants = {
@@ -44,8 +47,8 @@ const Footer = () => {
 
     // Social media links
     const socialLinks = [
-        { name: 'LinkedIn', url: 'https://linkedin.com', icon: '/assets/linkedin.png' },
-        { name: 'GitHub', url: 'https://github.com', icon: '/assets/github.png' },
+        { name: 'LinkedIn', url: 'https://linkedin.com/in/shashi-kumar-96941915a', icon: `${linkedinIcon}` },
+        { name: 'GitHub', url: 'https://github.com/shashi2424', icon: `${githubIcon}` },
         // Add more social links as needed
     ];
 

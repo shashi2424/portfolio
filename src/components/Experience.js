@@ -1,5 +1,8 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import companyLogo from "./assets/company-logo-1.png"
+import arrowLogo from "./assets/arrow.png"
+
 
 const Experience = () => {
     const ref = useRef(null);
@@ -36,7 +39,7 @@ const Experience = () => {
                 "Developed the Way2Ads Management System, enabling advertisers, sales, and ad operations teams to create, manage,and monitor campaigns seamlessly while accessing detailed performance reports.",
                 "Integrated third-party APIs and optimized application performance, reducing load time by 60%"
             ],
-            logo: "/assets/company-logo-1.png"
+            logo: `${companyLogo}`
         },
         {
             id: 2,
@@ -49,7 +52,7 @@ const Experience = () => {
                 "Implemented JWT-based authorization system enhancing security protocols for sensitive user data",
                 "Implemented CRUD operations for database credential management, enhancing security and access control. Utilized Redux for efficient state management across components."
             ],
-            logo: "/assets/company-logo-1.png"
+            logo: `${companyLogo}`
         }
     ];
 
@@ -131,7 +134,7 @@ const Experience = () => {
             </motion.div>
 
             <motion.img
-                src="/assets/arrow.png"
+                src={arrowLogo}
                 alt="Arrow icon"
                 className="icon arrow"
                 whileHover={{ scale: 1.2, y: 5 }}
