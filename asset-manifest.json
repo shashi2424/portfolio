@@ -1,25 +1,26 @@
 {
   "files": {
-    "main.css": "/portfolio/static/css/main.790b5690.css",
-    "main.js": "/portfolio/static/js/main.a7d8ea7d.js",
+    "main.css": "/portfolio/static/css/main.28acdd7e.css",
+    "main.js": "/portfolio/static/js/main.1d38c42b.js",
+    "static/js/616.2e840b28.chunk.js": "/portfolio/static/js/616.2e840b28.chunk.js",
+    "static/js/422.b8e37c18.chunk.js": "/portfolio/static/js/422.b8e37c18.chunk.js",
     "static/media/about-pic.jpeg": "/portfolio/static/media/about-pic.99df6eda9aade9bfb9ec.jpeg",
     "static/media/profile-pic.jpeg": "/portfolio/static/media/profile-pic.6641620ed64af0f2e2c5.jpeg",
     "static/media/project-3.jpg": "/portfolio/static/media/project-3.143a4a919ae0e31587ce.jpg",
     "static/media/project-1.png": "/portfolio/static/media/project-1.6ac36db52b1fff3f4d02.png",
-    "static/media/resume-example.pdf": "/portfolio/static/media/resume-example.4d6c030c00a53ac69780.pdf",
+    "static/media/resume-example.pdf": "/portfolio/static/media/resume-example.53c4e8238f198a0c6db9.pdf",
+    "static/media/project-5.webp": "/portfolio/static/media/project-5.4fba4963c917ab04ef11.webp",
     "static/media/project-2.jpg": "/portfolio/static/media/project-2.ba3e5943bbb26ce65dc5.jpg",
+    "static/media/project-4.jpg": "/portfolio/static/media/project-4.59b6d02f003fa08e643b.jpg",
     "static/media/company-logo-1.png": "/portfolio/static/media/company-logo-1.bfb7976627cdd3b70de7.png",
     "static/media/email.png": "/portfolio/static/media/email.761df3bc69bdc631bd2f.png",
-    "static/media/checkmark.png": "/portfolio/static/media/checkmark.86728d9a224a2c7c95d4.png",
     "static/media/arrow.png": "/portfolio/static/media/arrow.0dfabb0beab795eea0ab.png",
     "static/media/linkedin.png": "/portfolio/static/media/linkedin.032cf8a63be2f0f4d425.png",
     "static/media/resume.png": "/portfolio/static/media/resume.0379a40a3e2a62c0a589.png",
-    "index.html": "/portfolio/index.html",
-    "main.790b5690.css.map": "/portfolio/static/css/main.790b5690.css.map",
-    "main.a7d8ea7d.js.map": "/portfolio/static/js/main.a7d8ea7d.js.map"
+    "index.html": "/portfolio/index.html"
   },
   "entrypoints": [
-    "static/css/main.790b5690.css",
-    "static/js/main.a7d8ea7d.js"
+    "static/css/main.28acdd7e.css",
+    "static/js/main.1d38c42b.js"
   ]
 }
