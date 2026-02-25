@@ -1,5 +1,5 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { useRef, useState } from "react";
 
 import project1 from "./assets/project-1.png";
 import project2 from "./assets/project-2.jpg";
@@ -8,25 +8,79 @@ import project4 from "./assets/project-4.jpg";
 import project5 from "./assets/project-5.webp";
 import arrow from "./assets/arrow.png";
 
+// 3D Tilt Card component
+const TiltCard = ({ children, index, color, variants }) => {
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+  const cardRef = useRef(null);
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    setRotateX((y - centerY) / 15);
+    setRotateY((centerX - x) / 15);
+  };
+
+  const handleMouseLeave = () => {
+    setRotateX(0);
+    setRotateY(0);
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      className="details-container color-container glass-hover-card tilt-card"
+      variants={variants}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        flex: "1 1 320px",
+        maxWidth: "400px",
+        transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+        transition: "transform 0.15s ease-out",
+      }}
+      whileHover={{
+        borderColor: color.border,
+        boxShadow: `0 0 40px ${color.glow}`,
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 const Projects = () => {
   const ref = useRef(null);
+  const sectionRef = useRef(null);
   const isInView = useInView(ref, { once: true, threshold: 0.1 });
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+
+  const bgY = useTransform(scrollYProgress, [0, 1], [50, -50]);
 
   const container = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.2, delayChildren: 0.3 },
+      transition: { staggerChildren: 0.15, delayChildren: 0.3 },
     },
   };
 
   const item = {
-    hidden: { opacity: 0, y: 60, filter: "blur(10px)" },
+    hidden: { opacity: 0, y: 80, scale: 0.9, rotateX: 10 },
     show: {
       opacity: 1,
       y: 0,
-      filter: "blur(0px)",
-      transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] },
+      scale: 1,
+      rotateX: 0,
+      transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] },
     },
   };
 
@@ -73,6 +127,9 @@ const Projects = () => {
 
   return (
     <section id="projects" ref={ref}>
+      {/* Section divider */}
+      <div className="section-divider" />
+
       <motion.p
         className="section__text__p1"
         initial={{ opacity: 0, y: 50 }}
@@ -95,33 +152,26 @@ const Projects = () => {
       </motion.h1>
 
       <motion.div
+        ref={sectionRef}
         className="experience-details-container"
         variants={container}
         initial="hidden"
         animate={isInView ? "show" : "hidden"}
+        style={{ perspective: "1200px", y: bgY }}
       >
         <div
           className="about-containers"
           style={{ flexWrap: "wrap", justifyContent: "center" }}
         >
           {projects.map((project, index) => (
-            <motion.div
+            <TiltCard
               key={index}
-              className="details-container color-container"
+              index={index}
+              color={cardColors[index]}
               variants={item}
-              whileHover={{
-                scale: 1.03,
-                borderColor: cardColors[index].border,
-                boxShadow: `0 0 40px ${cardColors[index].glow}`,
-              }}
-              transition={{ duration: 0.3 }}
-              style={{
-                flex: "1 1 320px",
-                maxWidth: "400px",
-              }}
             >
               <div
-                className="article-container"
+                className="article-container project-image-wrapper"
                 style={{
                   marginBottom: "1rem",
                   overflow: "hidden",
@@ -132,8 +182,8 @@ const Projects = () => {
                   src={project.image}
                   alt={project.title}
                   className="project-img"
-                  whileHover={{ scale: 1.08 }}
-                  transition={{ duration: 0.4 }}
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
                 />
               </div>
               <h2
@@ -143,7 +193,7 @@ const Projects = () => {
                 {project.title}
               </h2>
               <p className="project-description">{project.description}</p>
-            </motion.div>
+            </TiltCard>
           ))}
         </div>
       </motion.div>

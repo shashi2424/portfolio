@@ -1,175 +1,216 @@
-import React, { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Float, MeshDistortMaterial, MeshWobbleMaterial } from '@react-three/drei';
-
-const AnimatedSphere = ({ position, color, speed, distort, size }) => {
-    const mesh = useRef();
-    useFrame((state) => {
-        mesh.current.rotation.x = state.clock.elapsedTime * speed * 0.2;
-        mesh.current.rotation.y = state.clock.elapsedTime * speed * 0.3;
-    });
-    return (
-        <Float speed={speed} rotationIntensity={1.5} floatIntensity={2.5}>
-            <mesh ref={mesh} position={position} scale={size}>
-                <icosahedronGeometry args={[1, 1]} />
-                <MeshDistortMaterial
-                    color={color}
-                    transparent
-                    opacity={0.15}
-                    distort={distort}
-                    speed={2}
-                    roughness={0}
-                />
-            </mesh>
-        </Float>
-    );
-};
-
-const AnimatedTorus = ({ position, color, speed, size }) => {
-    const mesh = useRef();
-    useFrame((state) => {
-        mesh.current.rotation.x = state.clock.elapsedTime * speed * 0.4;
-        mesh.current.rotation.z = state.clock.elapsedTime * speed * 0.2;
-    });
-    return (
-        <Float speed={speed * 0.7} rotationIntensity={2} floatIntensity={1.5}>
-            <mesh ref={mesh} position={position} scale={size}>
-                <torusGeometry args={[1, 0.4, 16, 32]} />
-                <MeshWobbleMaterial
-                    color={color}
-                    transparent
-                    opacity={0.1}
-                    factor={0.4}
-                    speed={1.5}
-                />
-            </mesh>
-        </Float>
-    );
-};
-
-const AnimatedOctahedron = ({ position, color, speed, size }) => {
-    const mesh = useRef();
-    useFrame((state) => {
-        mesh.current.rotation.y = state.clock.elapsedTime * speed * 0.3;
-        mesh.current.rotation.z = state.clock.elapsedTime * speed * 0.15;
-    });
-    return (
-        <Float speed={speed * 0.5} rotationIntensity={1} floatIntensity={2}>
-            <mesh ref={mesh} position={position} scale={size}>
-                <octahedronGeometry args={[1, 0]} />
-                <MeshDistortMaterial
-                    color={color}
-                    transparent
-                    opacity={0.12}
-                    distort={0.3}
-                    speed={1.5}
-                    roughness={0.2}
-                />
-            </mesh>
-        </Float>
-    );
-};
-
-const Particles = ({ count = 80 }) => {
-    const mesh = useRef();
-    const positions = useMemo(() => {
-        const pos = new Float32Array(count * 3);
-        for (let i = 0; i < count; i++) {
-            pos[i * 3] = (Math.random() - 0.5) * 25;
-            pos[i * 3 + 1] = (Math.random() - 0.5) * 25;
-            pos[i * 3 + 2] = (Math.random() - 0.5) * 15;
-        }
-        return pos;
-    }, [count]);
-
-    useFrame((state) => {
-        mesh.current.rotation.y = state.clock.elapsedTime * 0.02;
-        mesh.current.rotation.x = state.clock.elapsedTime * 0.01;
-    });
-
-    return (
-        <points ref={mesh}>
-            <bufferGeometry>
-                <bufferAttribute
-                    attach="attributes-position"
-                    count={count}
-                    array={positions}
-                    itemSize={3}
-                />
-            </bufferGeometry>
-            <pointsMaterial
-                size={0.05}
-                color="#6c63ff"
-                transparent
-                opacity={0.6}
-                sizeAttenuation
-            />
-        </points>
-    );
-};
-
-const GlowRing = ({ position, color, speed, size }) => {
-    const mesh = useRef();
-    useFrame((state) => {
-        mesh.current.rotation.x = Math.sin(state.clock.elapsedTime * speed) * 0.5;
-        mesh.current.rotation.y = state.clock.elapsedTime * speed * 0.2;
-    });
-    return (
-        <Float speed={speed * 0.3} floatIntensity={1}>
-            <mesh ref={mesh} position={position} scale={size}>
-                <torusGeometry args={[1, 0.02, 16, 100]} />
-                <meshBasicMaterial color={color} transparent opacity={0.3} />
-            </mesh>
-        </Float>
-    );
-};
-
-const Scene = () => {
-    return (
-        <>
-            <ambientLight intensity={0.3} />
-            <directionalLight position={[10, 10, 5]} intensity={0.2} />
-            <pointLight position={[-10, -10, -5]} intensity={0.2} color="#6c63ff" />
-            <pointLight position={[10, -10, 5]} intensity={0.1} color="#00d4ff" />
-
-            <AnimatedSphere position={[-4, 2, -3]} color="#6c63ff" speed={1.2} distort={0.4} size={1.5} />
-            <AnimatedSphere position={[4, -2, -5]} color="#00d4ff" speed={0.8} distort={0.3} size={1.2} />
-            <AnimatedSphere position={[0, 3, -4]} color="#ff6b9d" speed={1} distort={0.5} size={0.8} />
-
-            <AnimatedTorus position={[-3, -3, -6]} color="#6c63ff" speed={0.6} size={1} />
-            <AnimatedTorus position={[5, 1, -4]} color="#00d4ff" speed={0.9} size={0.7} />
-
-            <AnimatedOctahedron position={[3, 3, -5]} color="#ff6b9d" speed={0.7} size={0.9} />
-            <AnimatedOctahedron position={[-5, -1, -3]} color="#6c63ff" speed={0.5} size={0.6} />
-
-            <GlowRing position={[-2, 0, -7]} color="#6c63ff" speed={0.4} size={2} />
-            <GlowRing position={[3, -2, -8]} color="#00d4ff" speed={0.3} size={1.5} />
-
-            <Particles count={100} />
-        </>
-    );
-};
+import { useEffect, useRef, useCallback } from 'react';
 
 const FloatingShapes = () => {
+    const canvasRef = useRef(null);
+    const mouseRef = useRef({ x: -1000, y: -1000 });
+    const particlesRef = useRef([]);
+    const animFrameRef = useRef(null);
+
+    const COLORS = [
+        { r: 108, g: 99, b: 255 },   // purple
+        { r: 0, g: 212, b: 255 },     // cyan
+        { r: 255, g: 107, b: 157 },   // pink
+    ];
+
+    const createParticles = useCallback((width, height) => {
+        const count = Math.min(Math.floor((width * height) / 12000), 120);
+        const particles = [];
+        for (let i = 0; i < count; i++) {
+            const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                radius: 1.2 + Math.random() * 1.8,
+                color,
+                alpha: 0.3 + Math.random() * 0.5,
+                pulseSpeed: 0.005 + Math.random() * 0.015,
+                pulseOffset: Math.random() * Math.PI * 2,
+            });
+        }
+        return particles;
+    }, [COLORS]);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        const resize = () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width * window.devicePixelRatio;
+            canvas.height = height * window.devicePixelRatio;
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+
+            if (particlesRef.current.length === 0) {
+                particlesRef.current = createParticles(width, height);
+            }
+        };
+
+        const handleMouseMove = (e) => {
+            mouseRef.current.x = e.clientX;
+            mouseRef.current.y = e.clientY;
+        };
+
+        const handleMouseLeave = () => {
+            mouseRef.current.x = -1000;
+            mouseRef.current.y = -1000;
+        };
+
+        resize();
+        window.addEventListener('resize', resize);
+        window.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseleave', handleMouseLeave);
+
+        const CONNECTION_DIST = 150;
+        const MOUSE_DIST = 180;
+        let time = 0;
+
+        const draw = () => {
+            time += 1;
+            ctx.clearRect(0, 0, width, height);
+
+            // --- Gradient nebula backdrop ---
+            const grd1 = ctx.createRadialGradient(
+                width * 0.15, height * 0.2, 0,
+                width * 0.15, height * 0.2, width * 0.45
+            );
+            grd1.addColorStop(0, 'rgba(108, 99, 255, 0.06)');
+            grd1.addColorStop(1, 'transparent');
+            ctx.fillStyle = grd1;
+            ctx.fillRect(0, 0, width, height);
+
+            const grd2 = ctx.createRadialGradient(
+                width * 0.8, height * 0.7, 0,
+                width * 0.8, height * 0.7, width * 0.4
+            );
+            grd2.addColorStop(0, 'rgba(0, 212, 255, 0.04)');
+            grd2.addColorStop(1, 'transparent');
+            ctx.fillStyle = grd2;
+            ctx.fillRect(0, 0, width, height);
+
+            const grd3 = ctx.createRadialGradient(
+                width * 0.5, height * 0.9, 0,
+                width * 0.5, height * 0.9, width * 0.35
+            );
+            grd3.addColorStop(0, 'rgba(255, 107, 157, 0.03)');
+            grd3.addColorStop(1, 'transparent');
+            ctx.fillStyle = grd3;
+            ctx.fillRect(0, 0, width, height);
+
+            const particles = particlesRef.current;
+            const mx = mouseRef.current.x;
+            const my = mouseRef.current.y;
+
+            // --- Update & draw particles ---
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+
+                // Pulse alpha
+                p.alpha = 0.3 + 0.35 * Math.sin(time * p.pulseSpeed + p.pulseOffset);
+
+                // Mouse repulsion
+                const dmx = p.x - mx;
+                const dmy = p.y - my;
+                const distMouse = Math.sqrt(dmx * dmx + dmy * dmy);
+                if (distMouse < MOUSE_DIST && distMouse > 0) {
+                    const force = (MOUSE_DIST - distMouse) / MOUSE_DIST * 0.8;
+                    p.vx += (dmx / distMouse) * force * 0.3;
+                    p.vy += (dmy / distMouse) * force * 0.3;
+                }
+
+                // Apply velocity with damping
+                p.vx *= 0.98;
+                p.vy *= 0.98;
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Wrap around edges
+                if (p.x < -10) p.x = width + 10;
+                if (p.x > width + 10) p.x = -10;
+                if (p.y < -10) p.y = height + 10;
+                if (p.y > height + 10) p.y = -10;
+
+                // Draw particle with glow
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha})`;
+                ctx.fill();
+
+                // Soft glow
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius * 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha * 0.08})`;
+                ctx.fill();
+            }
+
+            // --- Draw connections ---
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < CONNECTION_DIST) {
+                        const opacity = (1 - dist / CONNECTION_DIST) * 0.15;
+                        const c1 = particles[i].color;
+                        const c2 = particles[j].color;
+                        const mr = (c1.r + c2.r) >> 1;
+                        const mg = (c1.g + c2.g) >> 1;
+                        const mb = (c1.b + c2.b) >> 1;
+
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(${mr}, ${mg}, ${mb}, ${opacity})`;
+                        ctx.lineWidth = 0.6;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // --- Mouse glow ---
+            if (mx > 0 && my > 0) {
+                const mouseGlow = ctx.createRadialGradient(mx, my, 0, mx, my, 120);
+                mouseGlow.addColorStop(0, 'rgba(108, 99, 255, 0.06)');
+                mouseGlow.addColorStop(1, 'transparent');
+                ctx.fillStyle = mouseGlow;
+                ctx.fillRect(mx - 120, my - 120, 240, 240);
+            }
+
+            animFrameRef.current = requestAnimationFrame(draw);
+        };
+
+        animFrameRef.current = requestAnimationFrame(draw);
+
+        return () => {
+            cancelAnimationFrame(animFrameRef.current);
+            window.removeEventListener('resize', resize);
+            window.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseleave', handleMouseLeave);
+        };
+    }, [createParticles]);
+
     return (
-        <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 0,
-            pointerEvents: 'none',
-        }}>
-            <Canvas
-                camera={{ position: [0, 0, 8], fov: 60 }}
-                dpr={[1, 1.5]}
-                gl={{ antialias: true, alpha: true }}
-                style={{ background: 'transparent' }}
-            >
-                <Scene />
-            </Canvas>
-        </div>
+        <canvas
+            ref={canvasRef}
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                zIndex: 0,
+                pointerEvents: 'none',
+            }}
+        />
     );
 };
 

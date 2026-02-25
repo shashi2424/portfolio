@@ -19,6 +19,185 @@
   border-radius: var(--border-radius-md);
 }
 
+/* Glass hover card with animated border */
+.glass-hover-card {
+  position: relative;
+}
+
+.glass-hover-card::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, transparent, rgba(108, 99, 255, 0.2), transparent, rgba(0, 212, 255, 0.2), transparent);
+  background-size: 300% 300%;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  animation: shimmerBorder 4s ease infinite;
+}
+
+.glass-hover-card:hover::after {
+  opacity: 1;
+}
+
+@keyframes shimmerBorder {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ============================================
+   Scroll Progress Bar
+   ============================================ */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  transform-origin: 0%;
+  z-index: 10000;
+  box-shadow: 0 0 10px rgba(108, 99, 255, 0.5), 0 0 20px rgba(108, 99, 255, 0.3);
+}
+
+/* ============================================
+   Background - handled by canvas in FloatingShapes.js
+   ============================================ */
+
+/* ============================================
+   Section Dividers
+   ============================================ */
+.section-divider {
+  width: 80px;
+  height: 3px;
+  background: var(--gradient-primary);
+  margin: 0 auto 3rem;
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.section-divider::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: dividerShine 3s ease-in-out infinite;
+}
+
+@keyframes dividerShine {
+  0% { left: -100%; }
+  100% { left: 200%; }
+}
+
+/* ============================================
+   Profile / Hero Section - Orbit Rings
+   ============================================ */
+.profile-pic-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 380px;
+  height: 380px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid;
+  pointer-events: none;
+}
+
+.orbit-ring-1 {
+  width: 110%;
+  height: 110%;
+  border-color: rgba(108, 99, 255, 0.15);
+  animation: orbitSpin 15s linear infinite;
+}
+
+.orbit-ring-2 {
+  width: 125%;
+  height: 125%;
+  border-color: rgba(0, 212, 255, 0.1);
+  animation: orbitSpin 20s linear infinite reverse;
+  border-style: dashed;
+}
+
+.orbit-ring-3 {
+  width: 140%;
+  height: 140%;
+  border-color: rgba(255, 107, 157, 0.08);
+  animation: orbitSpin 25s linear infinite;
+}
+
+@keyframes orbitSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Orbit dots */
+.orbit-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.orbit-dot-1 {
+  background: #6c63ff;
+  box-shadow: 0 0 10px rgba(108, 99, 255, 0.6);
+  animation: orbitDot1 15s linear infinite;
+}
+
+.orbit-dot-2 {
+  background: #00d4ff;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+  animation: orbitDot2 20s linear infinite reverse;
+}
+
+.orbit-dot-3 {
+  background: #ff6b9d;
+  box-shadow: 0 0 10px rgba(255, 107, 157, 0.6);
+  animation: orbitDot3 25s linear infinite;
+}
+
+@keyframes orbitDot1 {
+  0% { top: 0%; left: 50%; }
+  25% { top: 50%; left: 100%; }
+  50% { top: 100%; left: 50%; }
+  75% { top: 50%; left: 0%; }
+  100% { top: 0%; left: 50%; }
+}
+
+@keyframes orbitDot2 {
+  0% { top: 10%; left: 10%; }
+  25% { top: 10%; left: 90%; }
+  50% { top: 90%; left: 90%; }
+  75% { top: 90%; left: 10%; }
+  100% { top: 10%; left: 10%; }
+}
+
+@keyframes orbitDot3 {
+  0% { top: 50%; left: 0%; }
+  25% { top: 0%; left: 50%; }
+  50% { top: 50%; left: 100%; }
+  75% { top: 100%; left: 50%; }
+  100% { top: 50%; left: 0%; }
+}
+
+.hero-name {
+  overflow: visible !important;
+}
+
 /* ============================================
    Navigation - Desktop
    ============================================ */
@@ -203,6 +382,7 @@ section {
   gap: 5rem;
   padding-top: 120px;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 .section__pic-container {
@@ -244,7 +424,9 @@ section {
 
 .section__text {
   max-width: 600px;
+  width: 100%;
   text-align: center;
+  flex-shrink: 1;
 }
 
 /* Social Icons */
@@ -290,6 +472,22 @@ section {
   position: relative;
   overflow: hidden;
   letter-spacing: 0.02em;
+}
+
+/* Button shine effect */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
 }
 
 .btn-color-1 {
@@ -428,6 +626,149 @@ article p {
 }
 
 /* ============================================
+   Experience Timeline
+   ============================================ */
+.experience-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem 2rem 2.5rem;
+  position: relative;
+}
+
+/* Animated timeline line - scroll driven */
+.timeline-line {
+  position: absolute;
+  left: 1.25rem;
+  top: 2rem;
+  width: 2px;
+  background: var(--gradient-primary);
+  border-radius: 2px;
+  z-index: 1;
+  box-shadow: 0 0 8px rgba(108, 99, 255, 0.3);
+}
+
+/* Timeline dot on each card */
+.timeline-dot {
+  position: absolute;
+  left: -1.75rem;
+  top: 2.5rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  border: 2px solid var(--bg-primary);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2), 0 0 10px rgba(108, 99, 255, 0.3);
+  z-index: 2;
+}
+
+.experience-card {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--border-radius-md);
+  padding: 2rem;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.experience-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.experience-card:hover::before {
+  opacity: 1;
+}
+
+.experience-card:hover {
+  border-color: rgba(108, 99, 255, 0.3);
+  box-shadow: var(--shadow-glow);
+}
+
+.experience-header {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.company-logo-container {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.company-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.job-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem 0;
+  color: var(--text-primary);
+}
+
+.company-name {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 0.3rem 0;
+  color: var(--accent-primary);
+}
+
+.job-period, .job-location {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0.15rem 0;
+}
+
+.job-description ul {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0.5rem;
+}
+
+.description-bullet {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.description-bullet::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  box-shadow: 0 0 6px rgba(108, 99, 255, 0.4);
+}
+
+/* ============================================
    Projects Section
    ============================================ */
 #projects {
@@ -454,6 +795,32 @@ article p {
   font-size: 1.3rem;
   margin: 1rem 0;
   color: var(--text-primary);
+}
+
+/* 3D Tilt Card */
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tilt-card .project-image-wrapper {
+  transform: translateZ(20px);
+}
+
+.tilt-card .project-title {
+  transform: translateZ(10px);
+}
+
+/* ============================================
+   Project Cards
+   ============================================ */
+.project-description {
+  padding: 0 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
 }
 
 /* ============================================
@@ -674,133 +1041,6 @@ article p {
 }
 
 /* ============================================
-   Experience Timeline
-   ============================================ */
-.experience-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
-
-.experience-card {
-  background: var(--bg-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--border-radius-md);
-  padding: 2rem;
-  transition: all var(--transition-normal);
-  position: relative;
-  overflow: hidden;
-}
-
-.experience-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 100%;
-  background: var(--gradient-primary);
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-}
-
-.experience-card:hover::before {
-  opacity: 1;
-}
-
-.experience-card:hover {
-  border-color: rgba(108, 99, 255, 0.3);
-  box-shadow: var(--shadow-glow);
-}
-
-.experience-header {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.company-logo-container {
-  width: 56px;
-  height: 56px;
-  border-radius: var(--border-radius-sm);
-  overflow: hidden;
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.company-logo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.job-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin: 0 0 0.3rem 0;
-  color: var(--text-primary);
-}
-
-.company-name {
-  font-size: 1rem;
-  font-weight: 500;
-  margin: 0 0 0.3rem 0;
-  color: var(--accent-primary);
-}
-
-.job-period, .job-location {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin: 0.15rem 0;
-}
-
-.job-description ul {
-  list-style: none;
-  padding-left: 0;
-  margin-top: 0.5rem;
-}
-
-.description-bullet {
-  margin-bottom: 0.75rem;
-  line-height: 1.7;
-  color: var(--text-secondary);
-  padding-left: 1.2rem;
-  position: relative;
-}
-
-.description-bullet::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.65em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent-primary);
-}
-
-/* ============================================
-   Project Cards
-   ============================================ */
-.project-description {
-  padding: 0 1rem;
-  text-align: center;
-  color: var(--text-muted);
-  line-height: 1.7;
-  margin-bottom: 1rem;
-  font-size: 0.95rem;
-}
-
-/* ============================================
    Media Queries
    ============================================ */
 @media screen and (max-width: 1400px) {
@@ -819,6 +1059,11 @@ article p {
 
   .about-containers {
     flex-direction: column;
+  }
+
+  .profile-pic-wrapper {
+    width: 320px;
+    height: 320px;
   }
 }
 
@@ -841,6 +1086,11 @@ article p {
     height: 280px;
   }
 
+  .profile-pic-wrapper {
+    width: 300px;
+    height: 300px;
+  }
+
   .title {
     font-size: 2.2rem;
   }
@@ -848,12 +1098,30 @@ article p {
   .section__text__p2 {
     font-size: 1.3rem;
   }
+
+  /* Simplify timeline on tablet */
+  .experience-timeline {
+    padding-left: 1rem;
+  }
+
+  .timeline-line {
+    display: none;
+  }
+
+  .timeline-dot {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 768px) {
   .section__pic-container {
     width: 230px;
     height: 230px;
+  }
+
+  .profile-pic-wrapper {
+    width: 260px;
+    height: 260px;
   }
 
   .btn {
@@ -878,6 +1146,7 @@ article p {
     align-items: flex-start;
     gap: 1rem;
   }
+
 }
 
 @media screen and (max-width: 600px) {
@@ -916,4 +1185,10 @@ article p {
     flex-direction: column;
     padding: 2rem;
   }
+
+  .profile-pic-wrapper {
+    width: 220px;
+    height: 220px;
+  }
+
 }

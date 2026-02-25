@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import Navbar from './components/Navbar';
 import HamburgerNav from './components/HamburgerNav';
 import Profile from './components/Profile';
@@ -15,6 +15,12 @@ const FloatingShapes = lazy(() => import('./components/FloatingShapes'));
 
 function App() {
   const [width, setWidth] = useState(window.innerWidth);
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
 
   useEffect(() => {
     const handleResize = () => setWidth(window.innerWidth);
@@ -24,6 +30,9 @@ function App() {
 
   return (
     <div className="App">
+      {/* Scroll Progress Bar */}
+      <motion.div className="scroll-progress" style={{ scaleX }} />
+
       {width > 768 && <CustomCursor />}
 
       <Suspense fallback={null}>

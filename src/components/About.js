@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 
 import aboutPic from "./assets/about-pic.jpeg";
 import experienceIcon from "./assets/experience.png";
@@ -8,17 +8,60 @@ import arrowIcon from "./assets/arrow.png";
 
 const About = () => {
   const ref = useRef(null);
+  const imageRef = useRef(null);
+  const skillsRef = useRef(null);
   const isInView = useInView(ref, {
     once: true,
     threshold: 0.1,
     margin: "0px 0px -100px 0px",
   });
+  const skillsInView = useInView(skillsRef, {
+    once: true,
+    margin: "0px 0px -80px 0px",
+  });
+
+  const { scrollYProgress } = useScroll({
+    target: imageRef,
+    offset: ["start end", "end start"],
+  });
+
+  const imageY = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const imageScale = useTransform(scrollYProgress, [0, 0.5], [0.9, 1]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: { staggerChildren: 0.15, duration: 0.5 },
+    },
+  };
+
+  const slideFromLeft = {
+    hidden: { x: -80, opacity: 0, filter: "blur(10px)" },
+    visible: {
+      x: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+      transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] },
+    },
+  };
+
+  const slideFromRight = {
+    hidden: { x: 80, opacity: 0, filter: "blur(10px)" },
+    visible: {
+      x: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+      transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] },
+    },
+  };
+
+  const scaleUp = {
+    hidden: { scale: 0.8, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] },
     },
   };
 
@@ -126,6 +169,9 @@ const About = () => {
 
   return (
     <section id="about" ref={ref}>
+      {/* Section divider */}
+      <div className="section-divider" />
+
       <div className="container">
         <motion.div
           initial="hidden"
@@ -133,14 +179,17 @@ const About = () => {
           variants={containerVariants}
           className="about-content"
         >
-          <motion.div variants={itemVariants} className="section-header">
+          {/* Header with slide-in effect */}
+          <motion.div variants={scaleUp} className="section-header">
             <p className="section__text__p1">Get To Know More</p>
             <h1 className="title">About Me</h1>
           </motion.div>
 
           <div className="section-container">
+            {/* Image with parallax scroll */}
             <motion.div
-              variants={itemVariants}
+              ref={imageRef}
+              variants={slideFromLeft}
               className="section__pic-container about-image-container"
               style={{
                 position: "relative",
@@ -153,6 +202,8 @@ const About = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                y: imageY,
+                scale: imageScale,
               }}
             >
               <img
@@ -167,13 +218,15 @@ const About = () => {
                   borderRadius: "20px",
                 }}
               />
+              {/* Glowing border overlay */}
+              <div className="image-glow-border" />
             </motion.div>
 
             <div className="about-details-container">
               <div className="about-containers">
                 <motion.div
-                  variants={itemVariants}
-                  className="details-container"
+                  variants={slideFromRight}
+                  className="details-container glass-hover-card"
                   whileHover={{
                     scale: 1.03,
                     borderColor: "rgba(108, 99, 255, 0.4)",
@@ -194,8 +247,8 @@ const About = () => {
                 </motion.div>
 
                 <motion.div
-                  variants={itemVariants}
-                  className="details-container"
+                  variants={slideFromRight}
+                  className="details-container glass-hover-card"
                   whileHover={{
                     scale: 1.03,
                     borderColor: "rgba(0, 212, 255, 0.4)",
@@ -247,31 +300,49 @@ const About = () => {
             </div>
           </div>
 
-          {/* Skills Section */}
+          {/* Skills Section - separate scroll trigger */}
           <motion.div
-            variants={itemVariants}
+            ref={skillsRef}
             className="skills-section"
             style={{ marginTop: "4rem" }}
+            initial={{ opacity: 0, y: 60 }}
+            animate={skillsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
+            transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
-            <h1 className="title">My Skills</h1>
+            <motion.h1
+              className="title"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={skillsInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            >
+              My Skills
+            </motion.h1>
 
             <motion.div
               className="skills-grid"
               variants={skillsContainer}
               initial="hidden"
-              animate={isInView ? "show" : "hidden"}
+              animate={skillsInView ? "show" : "hidden"}
             >
-              {/* Frontend Card */}
+              {/* Frontend Card - slides from left */}
               <motion.div
-                className="skill-card"
-                variants={skillPill}
+                className="skill-card glass-hover-card"
+                initial={{ opacity: 0, x: -60, filter: "blur(8px)" }}
+                animate={skillsInView ? { opacity: 1, x: 0, filter: "blur(0px)" } : { opacity: 0, x: -60, filter: "blur(8px)" }}
+                transition={{ duration: 0.7, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
                 whileHover={{
                   borderColor: "rgba(108, 99, 255, 0.3)",
                   boxShadow: "0 0 30px rgba(108, 99, 255, 0.1)",
+                  y: -5,
                 }}
               >
                 <h2 className="skill-card-title">Frontend Development</h2>
-                <div className="skill-pills-wrap">
+                <motion.div
+                  className="skill-pills-wrap"
+                  variants={skillsContainer}
+                  initial="hidden"
+                  animate={skillsInView ? "show" : "hidden"}
+                >
                   {frontendSkills.map((skill, i) => (
                     <SkillPillComponent
                       key={i}
@@ -279,20 +350,28 @@ const About = () => {
                       variants={skillPill}
                     />
                   ))}
-                </div>
+                </motion.div>
               </motion.div>
 
-              {/* Backend Card */}
+              {/* Backend Card - slides from right */}
               <motion.div
-                className="skill-card"
-                variants={skillPill}
+                className="skill-card glass-hover-card"
+                initial={{ opacity: 0, x: 60, filter: "blur(8px)" }}
+                animate={skillsInView ? { opacity: 1, x: 0, filter: "blur(0px)" } : { opacity: 0, x: 60, filter: "blur(8px)" }}
+                transition={{ duration: 0.7, delay: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
                 whileHover={{
                   borderColor: "rgba(0, 212, 255, 0.3)",
                   boxShadow: "0 0 30px rgba(0, 212, 255, 0.1)",
+                  y: -5,
                 }}
               >
                 <h2 className="skill-card-title">Backend Development</h2>
-                <div className="skill-pills-wrap">
+                <motion.div
+                  className="skill-pills-wrap"
+                  variants={skillsContainer}
+                  initial="hidden"
+                  animate={skillsInView ? "show" : "hidden"}
+                >
                   {backendSkills.map((skill, i) => (
                     <SkillPillComponent
                       key={i}
@@ -300,7 +379,7 @@ const About = () => {
                       variants={skillPill}
                     />
                   ))}
-                </div>
+                </motion.div>
               </motion.div>
             </motion.div>
           </motion.div>
@@ -359,6 +438,22 @@ const About = () => {
                     flex-wrap: wrap;
                     gap: 0.5rem;
                     justify-content: center;
+                }
+                .image-glow-border {
+                    position: absolute;
+                    inset: 0;
+                    border-radius: 20px;
+                    border: 2px solid transparent;
+                    background: linear-gradient(135deg, rgba(108, 99, 255, 0.3), rgba(0, 212, 255, 0.3)) border-box;
+                    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+                    -webkit-mask-composite: xor;
+                    mask-composite: exclude;
+                    pointer-events: none;
+                    animation: borderGlow 3s ease-in-out infinite alternate;
+                }
+                @keyframes borderGlow {
+                    0% { opacity: 0.4; }
+                    100% { opacity: 1; }
                 }
                 @media (max-width: 600px) {
                     .skills-grid {

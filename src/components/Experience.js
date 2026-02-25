@@ -1,27 +1,48 @@
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import companyLogo from "./assets/company-logo-1.png";
 import arrowLogo from "./assets/arrow.png";
 
 const Experience = () => {
   const ref = useRef(null);
+  const timelineRef = useRef(null);
   const isInView = useInView(ref, { once: true, threshold: 0.1 });
+
+  // Scroll-driven timeline line
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start end", "end start"],
+  });
+  const lineHeight = useTransform(scrollYProgress, [0, 0.6], ["0%", "100%"]);
 
   const container = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.2, delayChildren: 0.3 },
+      transition: { staggerChildren: 0.3, delayChildren: 0.3 },
     },
   };
 
-  const item = {
-    hidden: { opacity: 0, y: 40, filter: "blur(10px)" },
+  // Alternate slide directions for cards
+  const slideFromLeft = {
+    hidden: { opacity: 0, x: -100, rotateY: 15, filter: "blur(10px)" },
     show: {
       opacity: 1,
-      y: 0,
+      x: 0,
+      rotateY: 0,
       filter: "blur(0px)",
-      transition: { duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] },
+      transition: { duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] },
+    },
+  };
+
+  const slideFromRight = {
+    hidden: { opacity: 0, x: 100, rotateY: -15, filter: "blur(10px)" },
+    show: {
+      opacity: 1,
+      x: 0,
+      rotateY: 0,
+      filter: "blur(0px)",
+      transition: { duration: 0.9, ease: [0.25, 0.46, 0.45, 0.94] },
     },
   };
 
@@ -57,18 +78,21 @@ const Experience = () => {
 
   return (
     <section id="experience" ref={ref}>
+      {/* Section divider */}
+      <div className="section-divider" />
+
       <motion.p
         className="section__text__p1"
-        initial={{ opacity: 0, y: 50 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 50, scale: 0.9 }}
         transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
       >
         My Professional
       </motion.p>
       <motion.h1
         className="title"
-        initial={{ opacity: 0, y: 50 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+        animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 50, scale: 0.9 }}
         transition={{
           duration: 0.6,
           delay: 0.1,
@@ -78,69 +102,82 @@ const Experience = () => {
         Experience
       </motion.h1>
 
-      <motion.div
-        className="experience-timeline"
-        variants={container}
-        initial="hidden"
-        animate={isInView ? "show" : "hidden"}
-      >
-        {experiences.map((exp) => (
-          <motion.div
-            key={exp.id}
-            className="experience-card"
-            variants={item}
-            whileHover={{
-              scale: 1.01,
-              borderColor: "rgba(108, 99, 255, 0.3)",
-              boxShadow: "0 0 40px rgba(108, 99, 255, 0.12)",
-            }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="experience-header">
-              <div className="company-logo-container">
-                <motion.img
-                  src={exp.logo}
-                  alt={`${exp.company} logo`}
-                  className="company-logo"
-                  whileHover={{ scale: 1.15, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  onError={(e) => {
-                    e.target.src = "";
-                  }}
-                />
-              </div>
-              <div className="job-details">
-                <h3 className="job-title">{exp.role}</h3>
-                <h4 className="company-name">{exp.company}</h4>
-                <p className="job-period">{exp.period}</p>
-                <p className="job-location">{exp.location}</p>
-              </div>
-            </div>
+      <div ref={timelineRef} style={{ position: "relative" }}>
+        {/* Animated timeline line */}
+        <motion.div
+          className="timeline-line"
+          style={{ height: lineHeight }}
+        />
 
-            <div className="job-description">
-              <ul>
-                {exp.description.map((bullet, index) => (
-                  <motion.li
-                    key={index}
-                    className="description-bullet"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={
-                      isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }
-                    }
-                    transition={{
-                      delay: 0.5 + index * 0.15,
-                      duration: 0.5,
-                      ease: [0.25, 0.46, 0.45, 0.94],
+        <motion.div
+          className="experience-timeline"
+          variants={container}
+          initial="hidden"
+          animate={isInView ? "show" : "hidden"}
+          style={{ perspective: "1000px" }}
+        >
+          {experiences.map((exp, index) => (
+            <motion.div
+              key={exp.id}
+              className="experience-card glass-hover-card"
+              variants={index % 2 === 0 ? slideFromLeft : slideFromRight}
+              whileHover={{
+                scale: 1.02,
+                borderColor: "rgba(108, 99, 255, 0.3)",
+                boxShadow: "0 0 40px rgba(108, 99, 255, 0.12)",
+                y: -5,
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Timeline dot */}
+              <div className="timeline-dot" />
+
+              <div className="experience-header">
+                <div className="company-logo-container">
+                  <motion.img
+                    src={exp.logo}
+                    alt={`${exp.company} logo`}
+                    className="company-logo"
+                    whileHover={{ scale: 1.15, rotate: 5 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                    onError={(e) => {
+                      e.target.src = "";
                     }}
-                  >
-                    {bullet}
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+                  />
+                </div>
+                <div className="job-details">
+                  <h3 className="job-title">{exp.role}</h3>
+                  <h4 className="company-name">{exp.company}</h4>
+                  <p className="job-period">{exp.period}</p>
+                  <p className="job-location">{exp.location}</p>
+                </div>
+              </div>
+
+              <div className="job-description">
+                <ul>
+                  {exp.description.map((bullet, bIndex) => (
+                    <motion.li
+                      key={bIndex}
+                      className="description-bullet"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={
+                        isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }
+                      }
+                      transition={{
+                        delay: 0.6 + index * 0.3 + bIndex * 0.1,
+                        duration: 0.5,
+                        ease: [0.25, 0.46, 0.45, 0.94],
+                      }}
+                    >
+                      {bullet}
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
 
       <motion.img
         src={arrowLogo}
